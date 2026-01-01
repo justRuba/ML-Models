@@ -4,19 +4,29 @@ import plotly.graph_objects as go
 from sklearn.metrics import confusion_matrix
 
 
-def plot_confusion(y_true, y_pred, labels=None, title="Confusion Matrix"):
+def plot_confusion(
+    y_true,
+    y_pred,
+    labels=None,
+    class_names=None,
+    title="Confusion Matrix"
+):
     if labels is None:
         labels = sorted(list(set(y_true) | set(y_pred)))
 
     cm = confusion_matrix(y_true, y_pred, labels=labels)
 
+    # Use class names ONLY for display
+    display_labels = class_names if class_names is not None else labels
+
     fig = ff.create_annotated_heatmap(
         z=cm,
-        x=labels,
-        y=labels,
+        x=display_labels,
+        y=display_labels,
         colorscale='Blues',
         showscale=True
     )
+
     fig.update_yaxes(autorange='reversed')
     fig.update_layout(title=title)
     fig.show()

@@ -9,15 +9,17 @@ def train_and_evaluate(
     task="classification",
     test_size=0.2,
     random_state=42,
-    labels=None,        
-    plot=True          
+    labels=None,
+    class_names=None,
+    plot=True
 ):
+
     # Split the data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,
         test_size=test_size,
         random_state=random_state,
-        stratify=y if task == "classification" else None
+        stratify=y if task=="classification" else None
     )
 
     # Fit the model
@@ -30,9 +32,10 @@ def train_and_evaluate(
     if task == "classification":
         metrics = classification_metrics(y_test, y_pred)
 
-        # Plot confusion matrix
-        if plot and labels is not None:
-            plot_confusion(y_test, y_pred, labels=labels)
+        # Plot confusion matrix safely
+        if plot:
+            plot_confusion(y_test, y_pred, labels=labels,class_names=class_names
+                           )
 
     # Regression task
     else:
@@ -42,4 +45,3 @@ def train_and_evaluate(
             plot_regression(y_test, y_pred)
 
     return metrics
-
